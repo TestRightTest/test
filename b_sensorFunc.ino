@@ -95,7 +95,6 @@ void sensorSetup(){
   Serial.println(userPassword);
   
   connectToWiFi();
-  
  }
 
 void connectToWiFi() {
@@ -652,6 +651,4 @@ void takeFirstReading(int chID) {
     sendDataToFirebase("/sampleDetails/"  + uidStr + " channel "   + String(chID+1) + "/FirstReading" , String(firstReading[chID]));
     sendDataToFirebase("/sampleDetails/"  + uidStr + " channel "   + String(chID+1) + "/White1" , String(whiteData[i]));
     sendDataToFirebase("/sampleDetails/"  + uidStr + " channel "   + String(chID+1) + "/White2" , String(whiteData[i+1]));
-
-    
 }

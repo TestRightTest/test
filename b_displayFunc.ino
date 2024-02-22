@@ -37,27 +37,52 @@ void displayReset() {
 //buffer to store data when wifi is not connected
 //const int numChannels = 16;
 //
-//struct SensorData {
-//  String sampleName;
-//  int channelId;
-//  int firstReading;
-//  int white1;
-//  int white2;
-//  long startTime;
-//  long endTime;
-//  String date;
-//  int mbrt;
-//  int endProgress;
-//  int progress;
-//};
+//
+//const int bufferCapacity = 200; // Adjust the capacity based on your needs
+//
 //
 //SensorData sensorDataArray[numChannels];
+//int bufferIndex = 0;
+//SensorData dataBuffer[bufferCapacity];
 //
 //void clearSensorData(int channelIndex) {
 //  // Clear the stored sensor data for the specified channel
 //  sensorDataArray[channelIndex] = SensorData();
 //}
-
+//
+//SensorData createSensorData(int channelId, const String& sampleName) {
+//  // Implement your logic to create a SensorData object
+//  // Populate the object with appropriate values based on your needs
+//  SensorData data;
+//  data.sampleName = sampleName;
+//  data.channelId = channelId;
+//  data.startTime = millis(); // Update with the appropriate value
+//  data.stopTime = 0; // Set initial value for stopTime
+//  data.date = ""; // Set initial value for date
+//  data.mbrt = 0; // Set initial value for mbrt
+//  data.endProgress = 0; // Set initial value for endProgress
+////  data.progress = 0; // Set initial value for progress
+//
+//  return data;
+//}
+//
+//void sendDataToFirebaseForBufferedData(const SensorData& bufferedData) {
+//  // Implement your logic to send data to Firebase for buffered data
+//  // Use the data from bufferedData
+//  Serial.print("Sending buffer data to firebase");
+//
+//  String uidStr = String(auth.token.uid.c_str());
+//  sendDataToFirebase("/sampleDetails/" + uidStr + " channel " + String(bufferedData.channelId) + "/SampleName", bufferedData.sampleName);
+//  sendDataToFirebase("/sampleDetails/" + uidStr + " channel " + String(bufferedData.channelId) + "/channelId", String(bufferedData.channelId));
+//  sendDataToFirebase("/sampleDetails/" + uidStr + " channel " + String(bufferedData.channelId) + "/startTime", String(bufferedData.startTime));
+//  sendDataToFirebase("/sampleDetails/" + uidStr + " channel " + String(bufferedData.channelId) + "/stopTime", String(bufferedData.endTime));
+//  sendDataToFirebase("/sampleDetails/" + uidStr + " channel " + String(bufferedData.channelId) + "/date", bufferedData.date);
+//  sendDataToFirebase("/sampleDetails/" + uidStr + " channel " + String(bufferedData.channelId) + "/mbrt", String(bufferedData.mbrt));
+//  sendDataToFirebase("/sampleDetails/" + uidStr + " channel " + String(bufferedData.channelId) + "/endProgress", String(bufferedData.endProgress));
+////  sendDataToFirebase("/sampleDetails/" + uidStr + " channel " + String(bufferedData.channelId) + "/progress", String(bufferedData.progress));
+//  Serial.print("buffer data Sent to firebase");
+//
+//}
 
 
 
@@ -78,6 +103,92 @@ void checkWiFiConnection() {
     previousMillisWifi = currentMillis;
   }
 }
+
+//
+//SensorData createSensorData(int channelId, const String& receivedMessage) {
+//  // Implement your logic to create a SensorData object
+//  // Populate the object with appropriate values based on your needs
+//  SensorData data;
+//  data.sampleName;
+//  data.channelId = channelId;
+//  data.startTime = millis(); // Update with the appropriate value
+//  data.endTime; // Set initial value for endTime
+////  data.date = ""; // Set initial value for date
+//  data.mbrt; // Set initial value for mbrt
+//  data.endProgress; // Set initial value for endProgress
+////  data.progress = 0; // Set initial value for progress
+//
+//  Serial.println("Created SensorData object:");
+//  Serial.println("Channel ID: " + String(data.channelId));
+//  Serial.println("SampleName: " + data.sampleName);
+//  Serial.println("StartTime: " + String(data.startTime));
+//  Serial.println("EndTime: " + String(data.endTime));
+////  Serial.println("Date: " + data.date);
+//  Serial.println("MBRT: " + String(data.mbrt));
+//  Serial.println("EndProgress: " + String(data.endProgress));
+//
+//  return data;
+//}
+//
+//void sendDataToFirebaseForBufferedData(const SensorData& bufferedData) {
+//  // Implement your logic to send data to Firebase for buffered data
+//  // Use the data from bufferedData
+//  Serial.println("Sending buffer data to Firebase");
+//
+//  String uidStr = String(auth.token.uid.c_str());
+//  Serial.println("Channel ID: " + String(bufferedData.channelId));
+//  Serial.println("SampleName: " + bufferedData.sampleName);
+//  Serial.println("StartTime: " + String(bufferedData.startTime));
+//  Serial.println("EndTime: " + String(bufferedData.endTime));
+////  Serial.println("Date: " + bufferedData.date);
+//  Serial.println("MBRT: " + String(bufferedData.mbrt));
+//  Serial.println("EndProgress: " + String(bufferedData.endProgress));
+//
+//  sendDataToFirebase("/sampleDetails/" + uidStr + " channel " + String(bufferedData.channelId) + "/SampleName", bufferedData.sampleName);
+//  sendDataToFirebase("/sampleDetails/" + uidStr + " channel " + String(bufferedData.channelId) + "/channelId", String(bufferedData.channelId));
+//  sendDataToFirebase("/sampleDetails/" + uidStr + " channel " + String(bufferedData.channelId) + "/startTime", String(bufferedData.startTime));
+//  sendDataToFirebase("/sampleDetails/" + uidStr + " channel " + String(bufferedData.channelId) + "/endTime", String(bufferedData.endTime));
+////  sendDataToFirebase("/sampleDetails/" + uidStr + " channel " + String(bufferedData.channelId) + "/date", bufferedData.date);
+//  sendDataToFirebase("/sampleDetails/" + uidStr + " channel " + String(bufferedData.channelId) + "/mbrt", String(bufferedData.mbrt));
+//  sendDataToFirebase("/sampleDetails/" + uidStr + " channel " + String(bufferedData.channelId) + "/endProgress", String(bufferedData.endProgress));
+////  sendDataToFirebase("/sampleDetails/" + uidStr + " channel " + String(bufferedData.channelId) + "/progress", String(bufferedData.progress));
+//
+//  Serial.println("Buffer data sent to Firebase");
+//}
+//
+//
+//void checkWiFiConnection() {
+//  unsigned long currentMillis = millis();
+//
+//  if (currentMillis - previousMillisWifi >= intervalWifi) {
+//    if (WiFi.status() == WL_CONNECTED) {
+//      Serial.println("Wifi Connected!");
+//      updateConnectionStatus();
+//      wifiConnected = true;
+//      hideData(SPwifiIcon); // Connected
+//
+//      // If WiFi connected, check for stored data in the buffer and send it to Firebase
+//      for (int i = 0; i < bufferIndex; i++) {
+//        Serial.print("Sending buffered data to Firebase: ");
+//        Serial.println(i);
+//        sendDataToFirebaseForBufferedData(dataBuffer[i]);
+//      }
+//
+//      // Clear the buffer
+//      bufferIndex = 0;
+//    } else {
+//      Serial.println("Wifi Not Connected!");
+//      showData(SPwifiIcon, wifiIcon); // Disconnected
+//      connectToWiFi();
+//      firebaseInitilize();
+//    }
+//
+//    previousMillisWifi = currentMillis;
+//  }
+//}
+
+
+
 
 
 void touch(int x, int y) {
@@ -132,10 +243,10 @@ void updateProgress(int channel) {
     String rootPath = "/users/" + uidStr + "/progress/" + uidStr + " channel " + String(channel) + "/";
     
     // Attempt to push the data
-    if (Firebase.RTDB.push(&fbdo, rootPath.c_str(), String(progressValues[channel]))) {
-        Serial.println("Progress value sent to Firebase successfully");
+    if (Firebase.RTDB.push(&fbdo, rootPath.c_str(), String(progressValues[channel-1]))) {
+//        Serial.println("Progress value sent to Firebase successfully");
     } else {
-        Serial.println("Failed to send progress value to Firebase");
+//        Serial.println("Failed to send progress value to Firebase");
     }
 }
 
@@ -292,10 +403,22 @@ void stopChannel(int i) {
 //    send to firebase
   updateTime();
   String uidStr = String(auth.token.uid.c_str());
-  sendDataToFirebase("/sampleDetails/"  + uidStr + " channel "   + String(i) + "/endProgress" , int(progressValues[i-1]));
-  sendDataToFirebase("/sampleDetails/"  + uidStr + " channel "   + String(i) + "/stopTime" , String(currentTime));
 
+    if (WiFi.status() == WL_CONNECTED) {
+      // WiFi is connected, send data to Firebase
+      sendDataToFirebase("/sampleDetails/" + uidStr + " channel " + String(i) + "/endProgress", String(progressValues[i - 1]));
+      sendDataToFirebase("/sampleDetails/" + uidStr + " channel " + String(i) + "/stopTime", String(currentTime));
+    } else {
+    // WiFi is not connected, add data to channel-specific buffer
+//    addToBuffer(i - 1, "/sampleDetails/" + uidStr + haaa" channel " + String(i) + "/endProgress: " + String(progressValues[i - 1]));
+//    addToBuffer(i - 1, "/sampleDetails/" + uidStr + " channel " + String(i) + "/stopTime: " + String(currentTime));
+    }
+
+  // Process the channel-specific buffer
+//   processBuffer(i - 1);
+  
   }
+
 
   isCompleted[i-1] = false;
   isRunning [i-1] = false;
@@ -341,11 +464,18 @@ void completedChannel(int i){
   updateTime();
   beep(500);
   String uidStr = String(auth.token.uid.c_str());
-  sendDataToFirebase("/sampleDetails/"  + uidStr + " channel "   + String(i) + "/mbrt" , String(mbrt[i-1]));
-  sendDataToFirebase("/sampleDetails/"  + uidStr + " channel "   + String(i) + "/endProgress" , int(progressValues[i-1]));
-  Serial.print("end progress value:");
-  Serial.print(progressValues[i-1]);
-  sendDataToFirebase("/sampleDetails/"  + uidStr + " channel "   + String(i) + "/stopTime" , String(currentTime));
+  if (WiFi.status() == WL_CONNECTED) {
+    // WiFi is connected, send data to Firebase
+    sendDataToFirebase("/sampleDetails/" + uidStr + " channel " + String(i) + "/mbrt", String(mbrt[i - 1]));
+    sendDataToFirebase("/sampleDetails/" + uidStr + " channel " + String(i) + "/endProgress", String(progressValues[i - 1]));
+    sendDataToFirebase("/sampleDetails/" + uidStr + " channel " + String(i) + "/stopTime", String(currentTime));
+  } else {
+    // WiFi is not connected, add data to the buffer
+//    if (bufferIndex < bufferCapacity) {
+//      dataBuffer[bufferIndex] = createSensorData(i, "CompletedData"); // Adjust this based on your needs
+//      bufferIndex++;
+//    }
+   }
   }
 
 void startChannel(int i, const String& receivedMessage) {
@@ -394,16 +524,27 @@ void startChannel(int i, const String& receivedMessage) {
   sendText(nameArray[i-1], receivedMessage.c_str(), 16);
   
   takeFirstReading(selectedChannel - 1);
-
+  String sampleName = receivedMessage;
   //send start channel command to firebase to get initial time
   updateTime();
   updateDate();
   String uidStr = String(auth.token.uid.c_str());
   Serial.println("Channel " + String(i) + " data sent");
-  sendDataToFirebase("/sampleDetails/"  + uidStr + " channel "   + String(i) + "/SampleName" , String(receivedMessage));
-  sendDataToFirebase("/sampleDetails/"  + uidStr + " channel "   + String(i) + "/channelId" , String(i));
-  sendDataToFirebase("/sampleDetails/"  + uidStr + " channel "   + String(i) + "/startTime" , String(currentTime ));
-  sendDataToFirebase("/sampleDetails/"  + uidStr + " channel "   + String(i) + "/date" , String(currentDate));
+  if (WiFi.status() == WL_CONNECTED) {
+    // WiFi is connected, send data to Firebase
+    Serial.print("wifi connected Storing data in firebase");
+
+    sendDataToFirebase("/sampleDetails/" + uidStr + " channel " + String(i) + "/SampleName", String(receivedMessage));
+    sendDataToFirebase("/sampleDetails/" + uidStr + " channel " + String(i) + "/channelId", String(i));
+    sendDataToFirebase("/sampleDetails/" + uidStr + " channel " + String(i) + "/startTime", String(currentTime));
+    sendDataToFirebase("/sampleDetails/" + uidStr + " channel " + String(i) + "/date", String(currentDate));
+  } else {
+        // WiFi is not connected, add data to channel-specific buffer
+//    addToBuffer(i - 1, "/sampleDetails/" + uidStr + " channel " + String(i) + "/SampleName: " + String(receivedMessage));
+//    addToBuffer(i - 1, "/sampleDetails/" + uidStr + " channel " + String(i) + "/channelId: " + String(i));
+//    addToBuffer(i - 1, "/sampleDetails/" + uidStr + " channel " + String(i) + "/startTime: " + String(currentTime));
+//    addToBuffer(i - 1, "/sampleDetails/" + uidStr + " channel " + String(i) + "/date: " + String(currentDate));
+  }
 }
 
 void changeColor(uint16_t mainAddress, int offset, uint16_t color) {
@@ -474,7 +615,7 @@ void displayRotationScreen() {
     }
   }
   else{
-    Serial.println("rotation is off");
+//    Serial.println("rotation is off");
     }
 }
 
@@ -580,7 +721,8 @@ void fetchText() {
       
       Serial.print("Selected Channel ");
       Serial.println(selectedChannel);
-     
+
+      sendText(0x1980, "", 30 );//reset white text box
       writeChannelNum();
     }
 

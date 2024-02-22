@@ -22,8 +22,6 @@ float temperature;
 float tempShift = 37.6; // temperature shift value
 float set_temp = 37.6 - (tempShift-37.6); //deg C
 
-
-
 bool rotateFlag = false;
 bool rotationEnableFlag;//flag for rotation 
 
@@ -35,9 +33,21 @@ bool wifiConnected = false;
 
 
 //firebase
+//struct SensorData {
+//  String sampleName;
+//  int channelId;
+//  int firstReading;
+//  int white1;
+//  int white2;
+//  long startTime;
+//  long endTime;
+////  String date;
+//  int mbrt;
+//  int endProgress;
+////  int progress;
+//};
 
 //ntp for date and time
-
 const char *ntpServer = "pool.ntp.org";
 const long gmtOffset_sec = 0;
 const int daylightOffset_sec = 3600;
@@ -112,7 +122,15 @@ HTTPClient http;
 
 bool initialSet = false; // to check if there  is any updated value of rotation interval 
 
-void firebaseInitilize(){
+void firebaseInitilize() {
+  // Check WiFi status
+  if (WiFi.status() != WL_CONNECTED) {
+//    Serial.println("WiFi not connected. Firebase initialization skipped.");
+    wifiConnected = false;
+    return; // Exit the function if WiFi is not connected
+  }
+
+  // Continue with Firebase initialization if WiFi is connected
   config.api_key = API_KEY;
   auth.user.email = userEmail;
   auth.user.password = userPassword;
@@ -125,7 +143,7 @@ void firebaseInitilize(){
   rotationIntervalMinutes = readDataFromFirebase("/deviceDetails/rotationTime");
   tempShift = readDataFromFirebase("/deviceDetails/tempShift");
   progressThreshold = readDataFromFirebase("/deviceDetails/endPointPercentage");
-//  rotateFlag = readDataFromFirebase("/deviceDetails/rotateFlag");
+  //  rotateFlag = readDataFromFirebase("/deviceDetails/rotateFlag");
   rotationEnableFlag = readDataFromFirebase("/deviceDetails/rotationEnabled");
 
   if (!initialSet) {
@@ -182,9 +200,9 @@ void sendDataToFirebase(const String& path, T data) {
   String fullPath = "/users/" + uidStr + path;
 
   if (Firebase.RTDB.set(&fbdo, fullPath.c_str(), data)) {
-    Serial.println(path + " sent to Firebase successfully!");
+//    Serial.println(path + " sent to Firebase successfully!");
   } else {
-    Serial.println("Failed to send " + path + " to Firebase.");
+//    Serial.println("Failed to send " + path + " to Firebase.");
   }
 }
 
@@ -225,15 +243,11 @@ void sendtempShiftToFirebase() {
 
   if (existingValue == 0.0) {
     tempShift = 37.6;
-//    EEPROM.write(168, tempShift);
-//    EEPROM.commit();
     sendDataToFirebase("/deviceDetails/tempShift", float(tempShift));
   } else {
     tempShift = existingValue;
     Serial.print("Current tempShift: ");
     Serial.println(tempShift);
-//    EEPROM.write(168, tempShift);
-//    EEPROM.commit();
     Serial.print("eeprom tempShift: ");
     Serial.println(tempShift);
   }
@@ -253,6 +267,29 @@ void sendRotateFlagToFirebase() {
     Serial.println(rotationEnableFlag);
   }
 }
+
+
+
+//const int BUFFER_SIZE = 10;
+//String dataBuffer[16][BUFFER_SIZE];
+//int bufferIndex[16] = {0}; // One buffer index for each channel
+//
+//void addToBuffer(int channel, const String& data) {
+//  if (bufferIndex[channel] < BUFFER_SIZE) {
+//    dataBuffer[channel][bufferIndex[channel]] = data;
+//    bufferIndex[channel]++;
+//  } else {
+//    // Buffer is full, handle accordingly (e.g., overwrite old data, discard, etc.)
+//  }
+//}
+//
+//void processBuffer(int channel) {
+//  for (int i = 0; i < bufferIndex[channel]; i++) {
+//    sendDataToFirebase(dataBuffer[channel][i]);
+//  }
+//  // Reset buffer after processing
+//  bufferIndex[channel] = 0;
+//}
 
 
 void setup() {
