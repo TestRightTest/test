@@ -7,7 +7,7 @@
 #include <HTTPClient.h>
 #include <ArduinoJson.h> 
 #include <NTPClient.h>
-
+#include <stdlib.h>
 
 
 const byte rxPin = 16; // rx2
@@ -15,6 +15,12 @@ const byte txPin = 17; // tx2
 HardwareSerial dwin(1);
 
 #define numChannels 16
+
+
+//for firebase
+#define MAX_CHANNELS 16
+String channelUIDs[MAX_CHANNELS];
+
 
 const float datainterval = 0.5; //in min
 //const float set_temp = 37.6; //deg C
@@ -204,6 +210,24 @@ void sendDataToFirebase(const String& path, T data) {
   } else {
 //    Serial.println("Failed to send " + path + " to Firebase.");
   }
+}
+
+
+String generateChannelUID(int channelNumber) {
+  // Get current user UID (assuming it's available in auth.token.uid.c_str())
+  String currentUserUID = String(auth.token.uid.c_str());
+
+  // Generate a random number
+  int randomValue = random(1000); // Adjust the range based on your needs
+
+  // Get current timestamp
+  unsigned long currentTime = millis();
+
+  // Combine the components to create the UID
+  String uidStr = currentUserUID + "_" + String(randomValue) + "_" + String(currentTime);
+    // Store the generated UID in the channelUIDs array
+  channelUIDs[channelNumber - 1] = uidStr;
+  return uidStr;
 }
 
 

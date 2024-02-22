@@ -647,7 +647,9 @@ void takeFirstReading(int chID) {
 
     //send firstreading to firebase
     //send white1 and white2
-    String uidStr = String(auth.token.uid.c_str());
+//    String uidStr = String(auth.token.uid.c_str());
+    String uidStr = channelUIDs[i+1];
+
     sendDataToFirebase("/sampleDetails/"  + uidStr + " channel "   + String(chID+1) + "/FirstReading" , String(firstReading[chID]));
     sendDataToFirebase("/sampleDetails/"  + uidStr + " channel "   + String(chID+1) + "/White1" , String(whiteData[i]));
     sendDataToFirebase("/sampleDetails/"  + uidStr + " channel "   + String(chID+1) + "/White2" , String(whiteData[i+1]));
